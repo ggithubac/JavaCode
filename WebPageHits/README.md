@@ -1,6 +1,7 @@
-# JavaCode
+# WebHitCount
 
- Problem: You’re given an input file. Each line consists of a timestamp (unix epoch in seconds) and
+ #Problem: 
+ You’re given an input file. Each line consists of a timestamp (unix epoch in seconds) and
  a url separated by ‘|’ (pipe operator). The entries are not in any chronological order. 
  Your task is to produce a daily summarized report on url hit count, organized daily (mm/dd/yyyy GMT) 
  with the earliest date appearing first. For each day, you should display the number of times each url 
@@ -11,18 +12,18 @@
  file.
  
  input.txt
- 1407564301|www.nba.com
- 1407478021|www.facebook.com
- 1407478022|www.facebook.com
- 1407481200|news.ycombinator.com
- 1407478028|www.google.com
- 1407564301|sports.yahoo.com
- 1407564300|www.cnn.com
- 1407564300|www.nba.com
- 1407564300|www.nba.com
- 1407564301|sports.yahoo.com
- 1407478022|www.google.com
- 1407648022|www.twitter.com
+ * 1407564301|www.nba.com
+ * 1407478021|www.facebook.com
+ * 1407478022|www.facebook.com
+ * 1407481200|news.ycombinator.com
+ * 1407478028|www.google.com
+ * 1407564301|sports.yahoo.com
+ * 1407564300|www.cnn.com
+ * 1407564300|www.nba.com
+ * 1407564300|www.nba.com
+ * 1407564301|sports.yahoo.com
+ * 1407478022|www.google.com
+ * 1407648022|www.twitter.com
  
  Output
  08/08/2014 GMT
