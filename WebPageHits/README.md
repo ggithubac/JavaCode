@@ -31,7 +31,6 @@
    www.cnn.com 1
    08/10/2014 GMT
    www.twitter.com 1
-```
  
  Correctness, efficiency (speed and memory) and code cleanliness will be evaluated. 
  Please provide a complexity analysis in Big-O notation for your program along with your source. 
@@ -40,8 +39,12 @@
  The code exists in src/main/java/webPageHits/webPageHits.java
 
   # Run:
-   Go to target/classes and run this command:
-    1. java -cp ./ webPageHits.webPageHits ../../src/main/resources/input.txt
+   1. From Eclipse IDE:
+      * Import the project into a existing maven repo
+      * Click on run button provided by the IDE
+   1. From command line:
+      * Go to target/classes and run this command:
+      * java -cp ./ webPageHits.webPageHits ../../src/main/resources/input.txt
 
   # Implementation:
     Given that there are fewer days and hit count values as compared to URLs. If we pick URL as the key 
@@ -68,8 +71,12 @@
   1. main  --> main function from where the program starts
 
  # Complexity analysis
-   While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount
-  
+   * Time Complexity:
+   While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount so overall time complexity if O(Nlog(N) here the N represents the number of dates which is relatively lower than the number of weblinks which are access in O(1). While sorting a priority queue assuming the underlying datastructure used is a heap as per the wiki reference provided below, and since we are reading from the hashmap and storing in the priority queue it takes O(N) to build the queue but this N is the aggregate N which is sorted by HitCount. so Overall time complexity is O(Nlog(N)) + O(N).
+ 
+   * Space Complexity:
+   The space complexity is O(N) where N is the number of items in the input file, which is the sum of Time in seconds and unique WebLinks in the first datastructure(TreeMap of hashMaps). The priority queue used to sort the webLinks based on HitCounts is temporary which will be discarded once the data is displayed. 
+
  # Sources
    My Sources are primarily google searches, stackoverflow and javadocs.
    1. Priority queue big-O analysis: 
