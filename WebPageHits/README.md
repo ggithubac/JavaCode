@@ -44,7 +44,14 @@
     1. java -cp ./ webPageHits.webPageHits ../../src/main/resources/input.txt
 
   # Implementation:
-    Given that there are fewer days and hit count values as compared to URLs. If we pick URL as the key and use a hashtable then insertions and accesses would be of O(1). While displaying since we need to display based on ascending order of dates so I picked TreeSet as the data structure to store the Dates, and also while displaying we need to display based on the descending order of the hitcount so I picked a Priority Queue to sort the hit count. So essentially I picked a HashMap of TreeSet combo datastructure while reading the input from the file and just before displaying for each date I picked a Priority Queue to sort the URLs using hitcount as the comparator. The Main class is webPageHits which has the main function, here is the description of remaining sub-classes, datastructures and functions:
+    Given that there are fewer days and hit count values as compared to URLs. If we pick URL as the key and use 
+    a hashtable then insertions and accesses would be of O(1). While displaying since we need to display based 
+    on ascending order of dates so I picked TreeSet as the data structure to store the Dates, and also while 
+    displaying we need to display based on the descending order of the hitcount so I picked a Priority Queue 
+    to sort the hit count. So essentially I picked a HashMap of TreeSet combo datastructure while reading the 
+    input from the file and just before displaying for each date I picked a Priority Queue to sort the URLs 
+    using hitcount as the comparator. The Main class is webPageHits which has the main function, here is the 
+    description of remaining sub-classes, datastructures and functions:
 
   1. webLinkHitCounts --> holds the hashmap on weblink and hitcount which is used while reading the data from input file.
   1. webLinkHitCount --> holds the two variables webLink and hitCount used inside the priority queue which is the datastructure to sort webLink in descending order of hitCounts
