@@ -152,25 +152,6 @@ public class webPageHits {
         }
     }
 	
-	class treeSetDate {
-		SortedSet<dateClass> treeSet = new TreeSet<dateClass>(new dateComp());
-	}
-	
-	class hitCountComp implements Comparator<Integer> {
-        public int compare(Integer paramT1, Integer paramT2) {
-            if (paramT1.compareTo(paramT2) > 0)
-                return -1;
-            else if (paramT1.compareTo(paramT2) < 0)
-                return 1;
-            else
-                return 0;
-        }
-    }
-	
-	class treeMapHitCount {
-		SortedMap<Integer, String> treeMap = new TreeMap<Integer, String>(new hitCountComp());
-	}
-	
 	private SortedMap<dateClass, webLinkHitCounts> displayData = new TreeMap<dateClass, webLinkHitCounts> (new dateComp());
 			
 	String convertUTCSecondsToDate(long seconds) {
@@ -282,6 +263,7 @@ public class webPageHits {
 		}
 	}
 
+	
 	/**
 	 * @param args
 	 */
@@ -295,10 +277,6 @@ public class webPageHits {
 		}
 		
 		String fileName = args[0]; 
-		
-		//System.out.println("FileName" + fileName);
-		
-		//wPHits.readFile("/Users/gunna04/Git-Repo/WebPageHits/src/main/resources/input.txt");
 		
 		wPHits.readFile(fileName);
 		
