@@ -21,3 +21,35 @@ while(true) {
        mutex.unlock()
        process_item(item)
 }
+
+# Solution:
+  The bug in the code is as follows:
+   let us say that the fifo_queue is empty for now and since there are many consumers, lets say two consumers(c1, c2) try to acquire the mutex lock. One consumer(c1) gets the lock, the second consumer(c2) waits on the mutex.lock(). c1 finds the queue empty and waits on the condition. c1 releases the lock but continues to wait on the blocked condition. Now lets say producer(p) successfully acquires the lock and adds the item to the fifo queue, and unlocks the mutex lock, before it sends the condition.signal, lets say context switch happens and c2 acquires the lock. At this point c1 is still waiting on the blocked condition, but c2 after acquiring the lock sees that fifo queue is not empty and removes the item from fifo queue and unlocks the item and processes the item. At this time if producer p get a chance to run and sends the condition.signal() c1 which was blocking on this condition wakes up and trys to remove item from a empty fifo queue unlocks the mutex and while processing the null item will crash.  This is the bug in the code. The way to fix is as below:
+
+
+
+```
+Producer
+while (true) {
+       item = generate_item()
+       mutex.lock()
+       fifo_queue.push(item)
+       mutex.unlock()
+       condition.signal()
+}
+
+Consumers
+while(true) {
+       mutex.lock()
+       if (fifo_queue.empty()) {
+             condition.wait(mutex)
+             continue    <---- ADD THIS LINE TO AVOID THE CRASH
+       }
+       item = fifo_queue.remove()
+       mutex.unlock()
+       process_item(item)
+}
+
+# Fix:
+  Fix is that when the blocked consumers are waiting on the signal and gets unblocked it has to check again if the queue is empty before dequeuing it and trying to process the item, as other consumers might have processed the item and queue is back to empty state. By adding continue after condition.wait(mutex) the consumer while again wait for mutex.lock() and check for fifo_queue.empty() before trying to remove the item from fifo_queue.
+

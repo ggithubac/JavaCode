@@ -71,4 +71,7 @@
    While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount
   
  # Sources
-   My Sources are primarily google searches, stackoverflow and javadocs 
+   My Sources are primarily google searches, stackoverflow and javadocs.
+   1. Priority queue big-O analysis: 
+         *  https://en.wikipedia.org/wiki/Priority_queue
+         *  https://stackoverflow.com/questions/47420638/time-complexity-of-java-priorityqueue-heap-insertion-of-n-elements
