@@ -73,10 +73,10 @@
 
  # Complexity analysis
    * Time Complexity:
-   While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount so overall time complexity if O(Nlog(N) here the N represents the number of dates which is relatively lower than the number of weblinks which are access in O(1). While sorting a priority queue assuming the underlying datastructure used is a heap as per the wiki reference provided below, and since we are reading from the hashmap and storing in the priority queue it takes O(N) to build the queue but this N is the aggregate N which is sorted by HitCount. so Overall time complexity is O(Nlog(N)) + O(N).
+   While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount so overall time complexity if O(Nlog(N) here the N represents the number of dates which is relatively lower than the number of weblinks which is O(1). While sorting a priority queue assuming the underlying datastructure used is a heap as per the wiki reference provided below, and since we are reading from the hashmap and storing in the priority queue it takes O(N) to build the queue but this N is the aggregate N which is sorted by HitCount. so Overall time complexity is O(Nlog(N)) + O(N) which is O(Nlog(N))
  
    * Space Complexity:
-   The space complexity is O(N) where N is the number of items in the input file, which is the sum of Time in seconds and unique WebLinks in the first datastructure(TreeMap of hashMaps). The priority queue used to sort the webLinks based on HitCounts is temporary which will be discarded once the data is displayed. 
+   The space complexity is O(N) where N is the number of items in the input file, which is the sum of Time in seconds and unique WebLinks in the first datastructure(TreeMap of hashMaps). The priority queue used to sort the webLinks based on HitCounts is temporary which will be discarded once the data is displayed. So overall space complexity if O(N).
 
  # Sources
    My Sources are primarily google searches, stackoverflow and javadocs.
