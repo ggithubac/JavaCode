@@ -53,5 +53,5 @@ while(true) {
 ```
 
 # Fix:
-  Fix is that when the blocked consumers are waiting on the signal and gets unblocked it has to check again if the queue is empty before dequeuing it and trying to process the item, as other consumers might have processed the item and queue is back to empty state. By adding continue after condition.wait(mutex) the consumer while again wait for mutex.lock() and check for fifo_queue.empty() before trying to remove the item from fifo_queue.
+  Fix is that when the blocked consumers are waiting on the signal and gets unblocked it has to check again if the queue is empty before dequeuing it and trying to process the item, as other consumers might have processed the item and queue is back to empty state. By adding continue after condition.wait(mutex) the consumer will again wait for mutex.lock() and check for fifo_queue.empty() before trying to remove the item from fifo_queue.
 
