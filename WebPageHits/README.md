@@ -48,35 +48,61 @@
       * java -cp ./ webPageHits.webPageHits ../../src/main/resources/input.txt
 
   # Implementation:
-    Given that there are fewer days and hit count values as compared to URLs. If we pick URL as the key 
-    and use a hashtable then insertions and accesses would be of O(1). While displaying since we need 
-    to display based on ascending order of dates so I picked TreeSet as the data structure to store 
-    the Dates, and also while displaying we need to display based on the descending order of the 
-    hitcount so I picked a Priority Queue to sort the hit count. So essentially I picked a HashMap of 
-    TreeSet combo datastructure while reading the input from the file and just before displaying for 
-    each date I picked a Priority Queue to sort the URLs using hitcount as the comparator. The Main 
-    class is webPageHits which has the main function, here is the description of remaining sub-classes,
-    datastructures and functions:
+    Two implementations Time and Space Complexity: 
+    # webPageHitsLessSpaceMoreTime.java: in this implementation the data is read from the
+    input file and given there are few distinct dates a TreeMap datastructure is maintained with the date string
+    as the key. The TreeMap will be relatively small with fewer nodes so searches which are O(logN) will be quicker. 
+    Insertions which is O(NlogN) is also quicker. To take advantage of few unique hitcounts while reading the input 
+    from the file itself again a TreeMap datastructure with HitCount as the key is maintained. Since there are many
+    unique URLs compared to dates and hitcount in each of the hitcount bucket there will be large number of URLS, first
+    implementation was done with linked list but the current implementation is a TreeSet datastructure. Although this 
+    datastructure is large since its a tree the searches are O(logN) and insertions are O(NlogN). So while inserting first
+    based on the date webLinkHitCount object is fetched. Now we search for the webLink under each of the HitCount buckets
+    if the webLink hitCount is found lets say under HitCount 1, then since we found webLink again this webLink is moved from
+    HitCount 1 bucket to HitCount 2 bucket and so on and so forth. With this implementation the most time consuming operation
+    is searching and moving the webLink from one hitCount bucket to another but while displaying the data everything is already
+    sorted.
 
-  1. webLinkHitCounts --> holds the hashmap on weblink and hitcount which is used while reading the data from input file.
-  1. webLinkHitCount --> holds the two variables webLink and hitCount used inside the priority queue which is the datastructure to sort webLink in descending order of hitCounts
-  1. dateClass --> holds the day, month and year variables and used to sort based on date and sorted in the TreeSet while reading from the file.
-  1. dateComp --> comparator used by the TreeSet datastructure to sort the date in ascending order
-  1. displayData --> The datastructure  used to store the date in ascending order and hashmap which stores all weblinks and hitcount
+    N1 --> unique Dates
+    N2 --> unique HitCounts
+    N3 --> unique webLinks
+
+    * Time Complexity: Insertion of Date into TreeMap datastructure is O(N1logN1) and searches are O(logN1) but N1 is relatively 
+      small here. Insertion of HitCount into TreeMap datastructure is O(N2logN2) and searches are O(logN2) again unique hitCount
+      is relatively small. Removal and Insertion of webLinks is O(N3logN3)(This is the move operation) and searches are O(logN3).
+    
+    * Space Complexity: Space complexity is O(N1) for unique dates, O(N2) for unique HitCounts and O(N3) for unique webLinks.
+      Off all the unique dates, HitCounts and webLinks webLinks is the most for over a large set of data O(N3) would be the largest.
+
+
+    # webPageHitsMoreSpaceLessTime.java: This is a optimization over webPageHitsLessSpaceMoreTime.java since the webLinks is stored in 
+    TreeSet datastructure, in this implementation another datastructure HashMap is maintained, which has webLink as the key and HitCount
+    as the value. In this implementation once webLinkHitCounts object is located based on date string, first we fetch the hitCount using 
+    the webLink as the key into the HashMap and use this hitCount to fetch the weblink from TreeMap. This way we don't have to search 
+    through all the HitCount buckets to locate the webLink there by saving the O(logN) searches. We still need to do O(NlogN) move operation.
+    The advantage with this implementation is that the overall performance improves, the disadvantage is another datastructure hashmap has
+    to be maintained which takes another O(N) space.
+
+    * Time Complexity: Besides what is already said with this program, we are doing a O(1) look up based on webLink and find out the hitcount.
+      This will reduce the search time from O(logN3) to O(1) since N3 is a relatively larger number the time saving will be huge for a large set
+      of data.
+      
+    
+    * Space Complexity: Besides what is already stated there is addition space taken to hold the hashTable, which is O(N3) since N3 is a large number
+      this can mean using lot of space to gain the speed.
+
+    Here is the description of remaining sub-classes, datastructures and functions:
+
+  1. dateComp --> String comparator used by displayData TreeMap datastructure to sort based on Date String
+  1. displayData --> Sorted TreeMap datastructure which holds data based on input file
   1. convertUTCSecondsToDate --> converter function to convert from seconds to UTC date.
-  1. buildDateObj --> dateClass builder function from the date String
-  1. hitCountComparator --> the comparator used by ProrityQueue to sort the weblinks in descending order based on hitCount
-  1. displayData --> the function to display the data based on ascending order dates and with dates descending order weblink and hitcount 
+  1. hitCountComparator --> the comparator used by TreeMap datastructure to sort the weblinks in descending order based on hitCount
+  1. webLinkHitCounts --> the class which holds TreeMap datastructure and also a hashmap in webPageHitsMoreSpaceLessTime.java code
+  1. displayData --> the function to display the data based on ascending order dates and with descending order of hitCount
   1. parseLine --> parser function to parse a line read from the given input file
   1. readFile --> reader function read lines from a given input file
   1. main  --> main function from where the program starts
 
- # Complexity analysis
-   * Time Complexity:
-   While reading the data from file inserting into the treemap, the insertion is O(Nlog(N)), insertion/access/update of weblink is O(1) with hitCount so overall time complexity if O(Nlog(N) here the N represents the number of dates which is relatively lower than the number of weblinks which is O(1). While sorting a priority queue assuming the underlying datastructure used is a heap as per the wiki reference provided below, and since we are reading from the hashmap and storing in the priority queue it takes O(N) to build the queue but this N is the aggregate N which is sorted by HitCount. so Overall time complexity is O(Nlog(N)) + O(N) which is O(Nlog(N))
- 
-   * Space Complexity:
-   The space complexity is O(N) where N is the number of items in the input file, which is the sum of Time in seconds and unique WebLinks in the first datastructure(TreeMap of hashMaps). The priority queue used to sort the webLinks based on HitCounts is temporary which will be discarded once the data is displayed. So overall space complexity if O(N).
 
  # Sources
    My Sources are primarily google searches, stackoverflow and javadocs.
