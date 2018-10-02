@@ -42,9 +42,8 @@ while (true) {
 Consumers
 while(true) {
        mutex.lock()
-       if (fifo_queue.empty()) {
+       while (fifo_queue.empty()) { <-- change the if condition to while loop
              condition.wait(mutex)
-             continue    <---- ADD THIS LINE TO AVOID THE CRASH
        }
        item = fifo_queue.remove()
        mutex.unlock()
@@ -53,5 +52,5 @@ while(true) {
 ```
 
 # Fix:
-  Fix is that when the blocked consumers are waiting on the signal and gets unblocked it has to check again if the queue is empty before dequeuing it and trying to process the item, as other consumers might have processed the item and queue is back to empty state. By adding continue after condition.wait(mutex) the consumer will again wait for mutex.lock() and check for fifo_queue.empty() before trying to remove the item from fifo_queue.
+  Fix is that when the blocked consumers are waiting on the signal and gets unblocked it has to check again if the queue is empty before dequeuing it and trying to process the item, as other consumers might have processed the item and queue is back to empty state. By converting if to while after condition.wait(mutex) the consumer will check again if fifo_queue.empty()  and wait on the condition again if it finds the queue empty.
 

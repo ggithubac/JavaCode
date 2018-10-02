@@ -6,7 +6,7 @@
  * is visited in the order of highest hit count to lowest count. Your program should take in one command 
  * line argument: input file name. The output should be printed to stdout. You can assume that the cardinality 
  * (i.e. number of distinct values) of hit count values and the number of days are much smaller than the number 
- * of unique URLs. You may also assume that number of unique URLs can fit in memory, but not necessarily the entire 
+ * of unique URLs. You may also assume that number of unique URLs can 	y, but not necessarily the entire 
  * file.
  * 
  * input.txt
@@ -44,8 +44,10 @@ package webPageHits;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -55,168 +57,79 @@ import java.util.*;
  */
 public class webPageHits {
 	
-	class webLinkHitCounts {
-		private Map<String, Integer> webLinkHitCount;
-
-		public webLinkHitCounts() {
-			super();
-			this.webLinkHitCount = new HashMap<String, Integer>();
-		}
-
-		public Map<String, Integer> getWebLinkHitCount() {
-			return webLinkHitCount;
-		}
-
-		public void setWebLinkHitCount(Map<String, Integer> webLinkHitCount) {
-			this.webLinkHitCount = webLinkHitCount;
-		}
-	}
-	
-	class webLinkHitCount {
-		String webLink = null;
-		Integer hitCount = 0;
-		
-		public webLinkHitCount(String webLink, Integer hitCount) {
-			super();
-			this.webLink = webLink;
-			this.hitCount = hitCount;
-		}
-		
-		public String getWebLink() {
-			return webLink;
-		}
-		public void setWebLink(String webLink) {
-			this.webLink = webLink;
-		}
-		
-		public Integer getHitCount() {
-			return hitCount;
-		}
-		public void setHitCount(Integer hitCount) {
-			this.hitCount = hitCount;
-		}
-	}
-	
-	class dateClass {
-		Integer day = 0;
-		Integer month = 0;
-		Integer year = 0;
-		
-		public dateClass(Integer day, Integer month, Integer year) {
-			super();
-			this.day = day;
-			this.month = month;
-			this.year = year;
-		}
-		
-		public Integer getDay() {
-			return day;
-		}
-		public void setDay(Integer day) {
-			this.day = day;
-		}
-		public Integer getMonth() {
-			return month;
-		}
-		public void setMonth(Integer month) {
-			this.month = month;
-		}
-		public Integer getYear() {
-			return year;
-		}
-		public void setYear(Integer year) {
-			this.year = year;
-		}
-	}
-	
-	class dateComp implements Comparator<dateClass> {
-        public int compare(dateClass paramT1, dateClass paramT2) {
-            if (paramT1.getYear().compareTo(paramT2.getYear()) < 0)
-                return -1;
-            else if (paramT1.getYear().compareTo(paramT2.getYear()) > 0)
-                return 1;
-            else {
-            	if (paramT1.getMonth().compareTo(paramT2.getMonth()) < 0)
-                    return -1;
-                else if (paramT1.getMonth().compareTo(paramT2.getMonth()) > 0)
-                    return 1;
-                else {
-                	if (paramT1.getDay().compareTo(paramT2.getDay()) < 0)
-                        return -1;
-                    else if (paramT1.getDay().compareTo(paramT2.getDay()) > 0)
-                        return 1;
-                    else 
-                        return 0;
-                }
-            }
-        }
+	class dateComp implements Comparator<String> {
+        public int compare(String paramT1, String paramT2) {
+        	
+        	if (paramT1.compareTo(paramT2) < 0) {
+        		return -1;
+        	} else if (paramT1.compareTo(paramT2) > 0) {
+        		return 1;
+        	} else
+        		return 0;
+       }
     }
-	
-	private SortedMap<dateClass, webLinkHitCounts> displayData = new TreeMap<dateClass, webLinkHitCounts> (new dateComp());
+
+	private SortedMap<String, webLinkHitCounts> displayData = new TreeMap<String, webLinkHitCounts> (new dateComp());
 			
 	String convertUTCSecondsToDate(long seconds) {
 		LocalDateTime dateTime = LocalDateTime.ofEpochSecond(seconds, 0, ZoneOffset.UTC);
-		int day = dateTime.getDayOfMonth();
-		int month = dateTime.getMonthValue();
-		int year = dateTime.getYear();
-
-		String date = new String(month + "/" + day + "/" + year);
+		String date = dateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		
 		return date;
 	}
 	
-	dateClass buildDateObj(String date) {
-		
-		Integer day = 0, month = 0 , year = 0;
-		String delimit = "[/]";
-		String[] tokens = date.split(delimit);
-		month = Integer.parseInt(tokens[0]);
-		day = Integer.parseInt(tokens[1]);
-		year = Integer.parseInt(tokens[2]);
-		
-		dateClass dClass = new dateClass(day, month, year);
-		
-		return dClass;
-		
-	}
-	
-	class hitCountComparator implements Comparator<webLinkHitCount> {
-		public int compare(webLinkHitCount s1, webLinkHitCount s2) {
-			if (s1.getHitCount() < s2.getHitCount()) {
+	class hitCountComparator implements Comparator<Integer> {
+		public int compare(Integer i1, Integer i2) {
+			if (i1.intValue() < i2.intValue()) {
 				return 1;
-			} else if (s1.getHitCount() > s2.getHitCount()) {
+			} else if (i1.intValue() > i2.intValue()) {
 				return -1;
 			}
 			return 0;
 		}
 	}
 	
+	class webLinkHitCounts {
+		private SortedMap<Integer, TreeSet<String>> webLinkHitCount;
+
+		public webLinkHitCounts() {
+			super();
+			this.webLinkHitCount = new TreeMap<Integer, TreeSet<String>> (new hitCountComparator());
+		}
+
+		public Map<Integer, TreeSet<String>> getWebLinkHitCount() {
+			return webLinkHitCount;
+		}
+
+		public void setWebLinkHitCount(SortedMap<Integer, TreeSet<String>> webLinkHitCount) {
+			this.webLinkHitCount = webLinkHitCount;
+		}
+	}
+	
 	void displayData() {
-		Map<dateClass, webLinkHitCounts> dD = displayData;
-		Set<dateClass> dateSet = dD.keySet();
+		Map<String, webLinkHitCounts> dD = displayData;
+		Set<String> dateSet = dD.keySet();
 		Iterator it = dateSet.iterator();
  		
  		while (it.hasNext()) {
- 			dateClass dClass = (dateClass)it.next();
+ 			String dDate = (String)it.next();
+ 			
+ 			String delimit = "[/]";
+ 			String[] tokens = dDate.split(delimit);
 
-			String date = new String(String.format("%02d", dClass.getMonth())+ "/" + String.format("%02d", dClass.getDay()) + "/" + dClass.getYear() + " GMT");
+			String date = new String(String.format("%02d", Integer.parseInt(tokens[0])) + "/" + String.format("%02d", Integer.parseInt(tokens[1])) + "/" + Integer.parseInt(tokens[2]) + " GMT");
 			System.out.println(date);
 			
-			webLinkHitCounts obj = dD.get(dClass);
-			Map<String, Integer> webLHC = obj.getWebLinkHitCount();
+			webLinkHitCounts obj = dD.get(dDate);
+			Map<Integer, TreeSet<String>> webLHC = obj.getWebLinkHitCount();
+
+			Set<Integer> sHitCount = webLHC.keySet();
 			
-			Iterator itW = webLHC.entrySet().iterator();
-			
-			PriorityQueue<webLinkHitCount> pq = new PriorityQueue<webLinkHitCount>(5, new hitCountComparator()); 
-			while (itW.hasNext()) {
-				Map.Entry pR = (Map.Entry)itW.next();
-				webLinkHitCount wLHC = new webLinkHitCount((String)pR.getKey(), (Integer)pR.getValue());
-				pq.add(wLHC);
-			}
-			
-			while (!pq.isEmpty()) {
-				webLinkHitCount wLink = pq.poll();
-				System.out.println(" " + wLink.getWebLink() + " " + wLink.getHitCount());
+			for (Integer val:sHitCount) {
+				TreeSet<String> lWebLink = webLHC.get(val);
+				for (String weblink:lWebLink) {
+					System.out.println(" " + weblink.toString() + " " + val.intValue());
+				}
 			}
 		}
 	}
@@ -230,22 +143,47 @@ public class webPageHits {
 		
 		String date = convertUTCSecondsToDate(seconds);
 		
-		dateClass dateObj = buildDateObj(date);
-		
-		webLinkHitCounts webLinkCount = displayData.get(dateObj);
+		webLinkHitCounts webLinkCount = displayData.get(date);
 		
 		if (webLinkCount == null) {
 			//No Entry for this key, create it and insert the entry
 			webLinkCount = new webLinkHitCounts();
-			webLinkCount.webLinkHitCount.put(weblink, 1);
-			displayData.put(dateObj, webLinkCount);
+			TreeSet<String> lString = new TreeSet<String> ();
+			lString.add(weblink);
+			webLinkCount.webLinkHitCount.put(1, lString);
+			displayData.put(date, webLinkCount);
 			
 		} else {
-			Integer val = webLinkCount.webLinkHitCount.get(weblink);
-			if (val == null) {
-				val = 0;
+			Set<Integer> HitCount = webLinkCount.getWebLinkHitCount().keySet();
+			boolean foundWebLink = false;
+			Integer foundKey = 0;
+			for (Integer key:HitCount) {
+				TreeSet<String> lString = webLinkCount.getWebLinkHitCount().get(key);
+				
+				if (lString.contains(weblink)) {
+					foundWebLink = true;
+					foundKey = key;
+					lString.remove(weblink);
+					break;
+				}	
 			}
-			webLinkCount.getWebLinkHitCount().put(weblink, ++val);
+			
+			if (!foundWebLink) {
+				//webLink doesn't exists insert into hitcount 1 bucket
+				TreeSet<String> lString = webLinkCount.getWebLinkHitCount().get(1);
+				lString.add(weblink);
+			} else {
+				Integer keyPlus = foundKey.intValue() + 1; //increase the hit count
+				TreeSet<String> lStr = webLinkCount.getWebLinkHitCount().get(keyPlus);
+				if (lStr == null) {
+					//this key doesn't exists
+					lStr = new TreeSet<String> ();
+					lStr.add(weblink);
+					webLinkCount.webLinkHitCount.put(keyPlus, lStr);
+				} else {
+					lStr.add(weblink);
+				}
+			}
 		}
 	}
 	
@@ -263,7 +201,6 @@ public class webPageHits {
 		}
 	}
 
-	
 	/**
 	 * @param args
 	 */
